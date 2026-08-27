@@ -1,0 +1,42 @@
+// Ini wajib ada buat ngasih tau Prisma kita pakai PostgreSQL
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// --- TABEL-TABEL DATABASE ---
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String    // Contoh: Kebab, Burger, Pizza
+  products Product[] // Relasi: 1 Kategori punya banyak Produk
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String   // Contoh: Beef Kejo Medium
+  price       Int      // Contoh: 12000
+  image_url   String?  // Tanda ? artinya boleh kosong (kalau belum ada foto)
+  
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id])
+}
+
+model City {
+  id      Int      @id @default(autoincrement())
+  name    String   // Contoh: Cikarang, Bekasi, Bogor
+  outlets Outlet[] // Relasi: 1 Kota punya banyak Outlet
+}
+
+model Outlet {
+  id       Int    @id @default(autoincrement())
+  name     String // Contoh: Alfamidi Cikarang Pusat
+  address  String
+  
+  cityId   Int
+  city     City   @relation(fields: [cityId], references: [id])
+}
